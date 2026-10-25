@@ -1,0 +1,30 @@
+name: Validar laboratorio
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  tests:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: python -m unittest discover -s tests -v
+      - run: python -m lab up --nodes 3
+      - run: python -m lab run E1
+      - run: python -m lab run E2
+      - run: python -m lab run E3 --repetitions 5
+      - name: Guardar evidencias
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: evidencias-verificacao-basica
+          path: results/
+          if-no-files-found: ignore
+      - name: Encerrar laboratorio
+        if: always()
+        run: python -m lab down

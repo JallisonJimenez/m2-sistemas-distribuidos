@@ -1,0 +1,35 @@
+name: Experimento E9 completo
+on:
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  e9:
+    runs-on: ubuntu-latest
+    timeout-minutes: 40
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Medir tres membros
+        run: |
+          python -m lab up --nodes 3
+          python -m lab run E9 --repetitions 5 --reads 100 --delay-ms 25
+          python -m lab down
+      - name: Medir cinco membros na mesma maquina
+        run: |
+          python -m lab up --nodes 5
+          python -m lab run E9 --repetitions 5 --reads 100 --delay-ms 25
+      - name: Guardar evidencias reais
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: e9-tres-e-cinco-membros
+          path: results/
+          if-no-files-found: ignore
+      - name: Restaurar e encerrar
+        if: always()
+        run: |
+          python -m lab recover
+          python -m lab down

@@ -1,0 +1,576 @@
+{
+  "purpose": "Validação nativa dos módulos _e2 e _e3; nenhum resultado Docker",
+  "etcd_version": "3.7.3",
+  "platform": "windows/amd64",
+  "checks": [
+    {
+      "check": "E2: put por seguidor, avanço de índices e leitura em outro membro",
+      "ok": true
+    },
+    {
+      "check": "E3: cinco puts/gets, visibilidade local e watch no terceiro membro",
+      "ok": true
+    },
+    {
+      "check": "E3: etcdctl check perf --load=s",
+      "ok": true
+    }
+  ],
+  "all_passed": true,
+  "raw_files": {
+    "caminho.json": {
+      "key": "/sd-lab/e2/3147d77c121e4b8f804ea34e374c6b37",
+      "entry_member": 1,
+      "leader_before": 3,
+      "before": {
+        "1": {
+          "header": {
+            "cluster_id": "14637027961858033260",
+            "member_id": "14264144857241359727",
+            "revision": "1",
+            "raft_term": "2"
+          },
+          "version": "3.7.3",
+          "dbSize": "24576",
+          "leader": "131541798437749290",
+          "raftIndex": "8",
+          "raftTerm": "2",
+          "raftAppliedIndex": "8",
+          "dbSizeInUse": "24576",
+          "storageVersion": "3.7.0",
+          "dbSizeQuota": "2147483648",
+          "downgradeInfo": {}
+        },
+        "2": {
+          "header": {
+            "cluster_id": "14637027961858033260",
+            "member_id": "11805874470951932634",
+            "revision": "1",
+            "raft_term": "2"
+          },
+          "version": "3.7.3",
+          "dbSize": "24576",
+          "leader": "131541798437749290",
+          "raftIndex": "8",
+          "raftTerm": "2",
+          "raftAppliedIndex": "8",
+          "dbSizeInUse": "24576",
+          "storageVersion": "3.7.0",
+          "dbSizeQuota": "2147483648",
+          "downgradeInfo": {}
+        },
+        "3": {
+          "header": {
+            "cluster_id": "14637027961858033260",
+            "member_id": "131541798437749290",
+            "revision": "1",
+            "raft_term": "2"
+          },
+          "version": "3.7.3",
+          "dbSize": "24576",
+          "leader": "131541798437749290",
+          "raftIndex": "8",
+          "raftTerm": "2",
+          "raftAppliedIndex": "8",
+          "dbSizeInUse": "24576",
+          "storageVersion": "3.7.0",
+          "dbSizeQuota": "2147483648",
+          "downgradeInfo": {}
+        }
+      },
+      "put_response": {
+        "header": {
+          "cluster_id": "14637027961858033260",
+          "member_id": "14264144857241359727",
+          "revision": "2",
+          "raft_term": "2"
+        }
+      },
+      "read_on_other_member": {
+        "header": {
+          "cluster_id": "14637027961858033260",
+          "member_id": "131541798437749290",
+          "revision": "2",
+          "raft_term": "2"
+        },
+        "kvs": [
+          {
+            "key": "L3NkLWxhYi9lMi8zMTQ3ZDc3YzEyMWU0YjhmODA0ZWEzNGUzNzRjNmIzNw==",
+            "create_revision": "2",
+            "mod_revision": "2",
+            "version": "1",
+            "value": "cHJvZHVjYW8="
+          }
+        ],
+        "count": "1"
+      },
+      "after": {
+        "1": {
+          "header": {
+            "cluster_id": "14637027961858033260",
+            "member_id": "14264144857241359727",
+            "revision": "2",
+            "raft_term": "2"
+          },
+          "version": "3.7.3",
+          "dbSize": "24576",
+          "leader": "131541798437749290",
+          "raftIndex": "9",
+          "raftTerm": "2",
+          "raftAppliedIndex": "9",
+          "dbSizeInUse": "24576",
+          "storageVersion": "3.7.0",
+          "dbSizeQuota": "2147483648",
+          "downgradeInfo": {}
+        },
+        "2": {
+          "header": {
+            "cluster_id": "14637027961858033260",
+            "member_id": "11805874470951932634",
+            "revision": "2",
+            "raft_term": "2"
+          },
+          "version": "3.7.3",
+          "dbSize": "24576",
+          "leader": "131541798437749290",
+          "raftIndex": "9",
+          "raftTerm": "2",
+          "raftAppliedIndex": "9",
+          "dbSizeInUse": "24576",
+          "storageVersion": "3.7.0",
+          "dbSizeQuota": "2147483648",
+          "downgradeInfo": {}
+        },
+        "3": {
+          "header": {
+            "cluster_id": "14637027961858033260",
+            "member_id": "131541798437749290",
+            "revision": "2",
+            "raft_term": "2"
+          },
+          "version": "3.7.3",
+          "dbSize": "24576",
+          "leader": "131541798437749290",
+          "raftIndex": "9",
+          "raftTerm": "2",
+          "raftAppliedIndex": "9",
+          "dbSizeInUse": "24576",
+          "storageVersion": "3.7.0",
+          "dbSizeQuota": "2147483648",
+          "downgradeInfo": {}
+        }
+      },
+      "scope": "Índices e resposta sustentam a análise; saltos Raft no diagrama são explicação do protocolo, não captura de pacotes."
+    },
+    "sequence.mmd": "sequenceDiagram\n    participant C as Cliente Python\n    participant F as etcd1 (seguidor)\n    participant L as etcd3 (líder observado)\n    participant R as Demais réplicas\n    C->>F: Put(/sd-lab/e2/3147d77c121e4b8f804ea34e374c6b37, producao)\n    F->>L: Proposta encaminhada\n    L->>R: AppendEntries\n    R-->>L: Confirmações da maioria\n    L->>L: Commit e aplicação ordenada\n    L-->>F: Resultado da proposta\n    F-->>C: Resposta com revisão 2\n",
+    "watch.json": {
+      "observer": 3,
+      "start_revision": 4,
+      "response": {
+        "result": {
+          "header": {
+            "cluster_id": "14637027961858033260",
+            "member_id": "131541798437749290",
+            "revision": "8",
+            "raft_term": "2"
+          },
+          "events": [
+            {
+              "kv": {
+                "key": "L3NkLWxhYi9lMy84MGQ3OTAzODdhYjI0YzU1YTA1MGY5MDVhYmI4MzBhMA==",
+                "create_revision": "3",
+                "mod_revision": "4",
+                "version": "2",
+                "value": "dmVyc2FvLTE="
+              }
+            },
+            {
+              "kv": {
+                "key": "L3NkLWxhYi9lMy84MGQ3OTAzODdhYjI0YzU1YTA1MGY5MDVhYmI4MzBhMA==",
+                "create_revision": "3",
+                "mod_revision": "5",
+                "version": "3",
+                "value": "dmVyc2FvLTI="
+              }
+            },
+            {
+              "kv": {
+                "key": "L3NkLWxhYi9lMy84MGQ3OTAzODdhYjI0YzU1YTA1MGY5MDVhYmI4MzBhMA==",
+                "create_revision": "3",
+                "mod_revision": "6",
+                "version": "4",
+                "value": "dmVyc2FvLTM="
+              }
+            },
+            {
+              "kv": {
+                "key": "L3NkLWxhYi9lMy84MGQ3OTAzODdhYjI0YzU1YTA1MGY5MDVhYmI4MzBhMA==",
+                "create_revision": "3",
+                "mod_revision": "7",
+                "version": "5",
+                "value": "dmVyc2FvLTQ="
+              }
+            },
+            {
+              "kv": {
+                "key": "L3NkLWxhYi9lMy84MGQ3OTAzODdhYjI0YzU1YTA1MGY5MDVhYmI4MzBhMA==",
+                "create_revision": "3",
+                "mod_revision": "8",
+                "version": "6",
+                "value": "dmVyc2FvLTU="
+              }
+            }
+          ]
+        }
+      }
+    },
+    "replicacao.json": {
+      "samples": [
+        {
+          "repetition": 1,
+          "put": {
+            "header": {
+              "cluster_id": "14637027961858033260",
+              "member_id": "14264144857241359727",
+              "revision": "4",
+              "raft_term": "2"
+            }
+          },
+          "local_read_after_ack": {
+            "header": {
+              "cluster_id": "14637027961858033260",
+              "member_id": "11805874470951932634",
+              "revision": "4",
+              "raft_term": "2"
+            },
+            "kvs": [
+              {
+                "key": "L3NkLWxhYi9lMy84MGQ3OTAzODdhYjI0YzU1YTA1MGY5MDVhYmI4MzBhMA==",
+                "create_revision": "3",
+                "mod_revision": "4",
+                "version": "2",
+                "value": "dmVyc2FvLTE="
+              }
+            ],
+            "count": "1"
+          },
+          "linearizable_read": {
+            "header": {
+              "cluster_id": "14637027961858033260",
+              "member_id": "11805874470951932634",
+              "revision": "4",
+              "raft_term": "2"
+            },
+            "kvs": [
+              {
+                "key": "L3NkLWxhYi9lMy84MGQ3OTAzODdhYjI0YzU1YTA1MGY5MDVhYmI4MzBhMA==",
+                "create_revision": "3",
+                "mod_revision": "4",
+                "version": "2",
+                "value": "dmVyc2FvLTE="
+              }
+            ],
+            "count": "1"
+          }
+        },
+        {
+          "repetition": 2,
+          "put": {
+            "header": {
+              "cluster_id": "14637027961858033260",
+              "member_id": "14264144857241359727",
+              "revision": "5",
+              "raft_term": "2"
+            }
+          },
+          "local_read_after_ack": {
+            "header": {
+              "cluster_id": "14637027961858033260",
+              "member_id": "11805874470951932634",
+              "revision": "5",
+              "raft_term": "2"
+            },
+            "kvs": [
+              {
+                "key": "L3NkLWxhYi9lMy84MGQ3OTAzODdhYjI0YzU1YTA1MGY5MDVhYmI4MzBhMA==",
+                "create_revision": "3",
+                "mod_revision": "5",
+                "version": "3",
+                "value": "dmVyc2FvLTI="
+              }
+            ],
+            "count": "1"
+          },
+          "linearizable_read": {
+            "header": {
+              "cluster_id": "14637027961858033260",
+              "member_id": "11805874470951932634",
+              "revision": "5",
+              "raft_term": "2"
+            },
+            "kvs": [
+              {
+                "key": "L3NkLWxhYi9lMy84MGQ3OTAzODdhYjI0YzU1YTA1MGY5MDVhYmI4MzBhMA==",
+                "create_revision": "3",
+                "mod_revision": "5",
+                "version": "3",
+                "value": "dmVyc2FvLTI="
+              }
+            ],
+            "count": "1"
+          }
+        },
+        {
+          "repetition": 3,
+          "put": {
+            "header": {
+              "cluster_id": "14637027961858033260",
+              "member_id": "14264144857241359727",
+              "revision": "6",
+              "raft_term": "2"
+            }
+          },
+          "local_read_after_ack": {
+            "header": {
+              "cluster_id": "14637027961858033260",
+              "member_id": "11805874470951932634",
+              "revision": "6",
+              "raft_term": "2"
+            },
+            "kvs": [
+              {
+                "key": "L3NkLWxhYi9lMy84MGQ3OTAzODdhYjI0YzU1YTA1MGY5MDVhYmI4MzBhMA==",
+                "create_revision": "3",
+                "mod_revision": "6",
+                "version": "4",
+                "value": "dmVyc2FvLTM="
+              }
+            ],
+            "count": "1"
+          },
+          "linearizable_read": {
+            "header": {
+              "cluster_id": "14637027961858033260",
+              "member_id": "11805874470951932634",
+              "revision": "6",
+              "raft_term": "2"
+            },
+            "kvs": [
+              {
+                "key": "L3NkLWxhYi9lMy84MGQ3OTAzODdhYjI0YzU1YTA1MGY5MDVhYmI4MzBhMA==",
+                "create_revision": "3",
+                "mod_revision": "6",
+                "version": "4",
+                "value": "dmVyc2FvLTM="
+              }
+            ],
+            "count": "1"
+          }
+        },
+        {
+          "repetition": 4,
+          "put": {
+            "header": {
+              "cluster_id": "14637027961858033260",
+              "member_id": "14264144857241359727",
+              "revision": "7",
+              "raft_term": "2"
+            }
+          },
+          "local_read_after_ack": {
+            "header": {
+              "cluster_id": "14637027961858033260",
+              "member_id": "11805874470951932634",
+              "revision": "7",
+              "raft_term": "2"
+            },
+            "kvs": [
+              {
+                "key": "L3NkLWxhYi9lMy84MGQ3OTAzODdhYjI0YzU1YTA1MGY5MDVhYmI4MzBhMA==",
+                "create_revision": "3",
+                "mod_revision": "7",
+                "version": "5",
+                "value": "dmVyc2FvLTQ="
+              }
+            ],
+            "count": "1"
+          },
+          "linearizable_read": {
+            "header": {
+              "cluster_id": "14637027961858033260",
+              "member_id": "11805874470951932634",
+              "revision": "7",
+              "raft_term": "2"
+            },
+            "kvs": [
+              {
+                "key": "L3NkLWxhYi9lMy84MGQ3OTAzODdhYjI0YzU1YTA1MGY5MDVhYmI4MzBhMA==",
+                "create_revision": "3",
+                "mod_revision": "7",
+                "version": "5",
+                "value": "dmVyc2FvLTQ="
+              }
+            ],
+            "count": "1"
+          }
+        },
+        {
+          "repetition": 5,
+          "put": {
+            "header": {
+              "cluster_id": "14637027961858033260",
+              "member_id": "14264144857241359727",
+              "revision": "8",
+              "raft_term": "2"
+            }
+          },
+          "local_read_after_ack": {
+            "header": {
+              "cluster_id": "14637027961858033260",
+              "member_id": "11805874470951932634",
+              "revision": "8",
+              "raft_term": "2"
+            },
+            "kvs": [
+              {
+                "key": "L3NkLWxhYi9lMy84MGQ3OTAzODdhYjI0YzU1YTA1MGY5MDVhYmI4MzBhMA==",
+                "create_revision": "3",
+                "mod_revision": "8",
+                "version": "6",
+                "value": "dmVyc2FvLTU="
+              }
+            ],
+            "count": "1"
+          },
+          "linearizable_read": {
+            "header": {
+              "cluster_id": "14637027961858033260",
+              "member_id": "11805874470951932634",
+              "revision": "8",
+              "raft_term": "2"
+            },
+            "kvs": [
+              {
+                "key": "L3NkLWxhYi9lMy84MGQ3OTAzODdhYjI0YzU1YTA1MGY5MDVhYmI4MzBhMA==",
+                "create_revision": "3",
+                "mod_revision": "8",
+                "version": "6",
+                "value": "dmVyc2FvLTU="
+              }
+            ],
+            "count": "1"
+          }
+        }
+      ],
+      "measurement_scope": "visibility_after_ack mede o tempo após o ACK até observar a versão em leitura local de outra réplica; não é o tempo interno completo da replicação."
+    },
+    "check-perf.txt": "PASS: Throughput is 151 writes/s\nPASS: Slowest request took 0.138941s\nPASS: Stddev is 0.009791s\nPASS\n"
+  },
+  "measurements": [
+    {
+      "metric": "put_latency",
+      "elapsed_ms": 2.3260999987542164,
+      "repetition": 1,
+      "member": 1,
+      "success": true
+    },
+    {
+      "metric": "visibility_after_ack",
+      "elapsed_ms": 0.5543000006582588,
+      "repetition": 1,
+      "member": 2,
+      "success": true
+    },
+    {
+      "metric": "get_latency",
+      "elapsed_ms": 0.5851000023540109,
+      "repetition": 1,
+      "member": 2,
+      "success": true
+    },
+    {
+      "metric": "put_latency",
+      "elapsed_ms": 3.1720000006316695,
+      "repetition": 2,
+      "member": 1,
+      "success": true
+    },
+    {
+      "metric": "visibility_after_ack",
+      "elapsed_ms": 0.5470000032801181,
+      "repetition": 2,
+      "member": 2,
+      "success": true
+    },
+    {
+      "metric": "get_latency",
+      "elapsed_ms": 0.5138999986229464,
+      "repetition": 2,
+      "member": 2,
+      "success": true
+    },
+    {
+      "metric": "put_latency",
+      "elapsed_ms": 1.5024000022094697,
+      "repetition": 3,
+      "member": 1,
+      "success": true
+    },
+    {
+      "metric": "visibility_after_ack",
+      "elapsed_ms": 0.31490000037592836,
+      "repetition": 3,
+      "member": 2,
+      "success": true
+    },
+    {
+      "metric": "get_latency",
+      "elapsed_ms": 0.5221999999776017,
+      "repetition": 3,
+      "member": 2,
+      "success": true
+    },
+    {
+      "metric": "put_latency",
+      "elapsed_ms": 1.9976000003225636,
+      "repetition": 4,
+      "member": 1,
+      "success": true
+    },
+    {
+      "metric": "visibility_after_ack",
+      "elapsed_ms": 0.316400000883732,
+      "repetition": 4,
+      "member": 2,
+      "success": true
+    },
+    {
+      "metric": "get_latency",
+      "elapsed_ms": 0.44039999920642003,
+      "repetition": 4,
+      "member": 2,
+      "success": true
+    },
+    {
+      "metric": "put_latency",
+      "elapsed_ms": 67.91860000157612,
+      "repetition": 5,
+      "member": 1,
+      "success": true
+    },
+    {
+      "metric": "visibility_after_ack",
+      "elapsed_ms": 0.49140000191982836,
+      "repetition": 5,
+      "member": 2,
+      "success": true
+    },
+    {
+      "metric": "get_latency",
+      "elapsed_ms": 0.5191999989619944,
+      "repetition": 5,
+      "member": 2,
+      "success": true
+    }
+  ]
+}

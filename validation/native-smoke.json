@@ -1,0 +1,33 @@
+{
+  "purpose": "Teste de integração do cliente Python; não são medições E1-E9 do ambiente Docker",
+  "etcd_version": "3.7.3",
+  "platform": "windows/amd64",
+  "checks": [
+    {
+      "check": "3 membros com líder comum",
+      "ok": true,
+      "leader": 2
+    },
+    {
+      "check": "put via seguidor e get em outro membro com UTF-8",
+      "ok": true
+    },
+    {
+      "check": "leitura serializável via gateway",
+      "ok": true
+    },
+    {
+      "check": "falha do líder, novo termo e escrita com 2/3",
+      "ok": true
+    },
+    {
+      "check": "sem quórum get local responde; get linearizável e put falham",
+      "ok": true
+    },
+    {
+      "check": "recuperação após reinício e preservação de escrita confirmada",
+      "ok": true
+    }
+  ],
+  "all_passed": true
+}

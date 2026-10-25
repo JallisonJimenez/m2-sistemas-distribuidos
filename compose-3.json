@@ -1,0 +1,186 @@
+{
+  "services": {
+    "etcd1": {
+      "image": "quay.io/coreos/etcd:v3.7.3",
+      "entrypoint": [
+        "/usr/local/bin/etcd"
+      ],
+      "command": [
+        "--name=etcd1",
+        "--data-dir=/etcd-data",
+        "--listen-peer-urls=http://172.29.0.11:2380",
+        "--initial-advertise-peer-urls=http://172.29.0.11:2380",
+        "--listen-client-urls=http://0.0.0.0:2379",
+        "--advertise-client-urls=http://172.29.1.11:2379",
+        "--initial-cluster=etcd1=http://172.29.0.11:2380,etcd2=http://172.29.0.12:2380,etcd3=http://172.29.0.13:2380",
+        "--initial-cluster-state=new",
+        "--initial-cluster-token=sd-etcd-n3",
+        "--heartbeat-interval=100",
+        "--election-timeout=1000",
+        "--snapshot-count=1000",
+        "--snapshot-catchup-entries=100",
+        "--log-level=info"
+      ],
+      "mem_limit": "256m",
+      "cpus": 0.5,
+      "stop_grace_period": "10s",
+      "ports": [
+        "127.0.0.1:12379:2379"
+      ],
+      "volumes": [
+        "data1:/etcd-data"
+      ],
+      "networks": {
+        "raft": {
+          "ipv4_address": "172.29.0.11"
+        },
+        "clients": {
+          "ipv4_address": "172.29.1.11"
+        }
+      },
+      "healthcheck": {
+        "test": [
+          "CMD",
+          "/usr/local/bin/etcdctl",
+          "--endpoints=http://127.0.0.1:2379",
+          "--command-timeout=2s",
+          "endpoint",
+          "health"
+        ],
+        "interval": "5s",
+        "timeout": "3s",
+        "retries": 12
+      }
+    },
+    "etcd2": {
+      "image": "quay.io/coreos/etcd:v3.7.3",
+      "entrypoint": [
+        "/usr/local/bin/etcd"
+      ],
+      "command": [
+        "--name=etcd2",
+        "--data-dir=/etcd-data",
+        "--listen-peer-urls=http://172.29.0.12:2380",
+        "--initial-advertise-peer-urls=http://172.29.0.12:2380",
+        "--listen-client-urls=http://0.0.0.0:2379",
+        "--advertise-client-urls=http://172.29.1.12:2379",
+        "--initial-cluster=etcd1=http://172.29.0.11:2380,etcd2=http://172.29.0.12:2380,etcd3=http://172.29.0.13:2380",
+        "--initial-cluster-state=new",
+        "--initial-cluster-token=sd-etcd-n3",
+        "--heartbeat-interval=100",
+        "--election-timeout=1000",
+        "--snapshot-count=1000",
+        "--snapshot-catchup-entries=100",
+        "--log-level=info"
+      ],
+      "mem_limit": "256m",
+      "cpus": 0.5,
+      "stop_grace_period": "10s",
+      "ports": [
+        "127.0.0.1:13379:2379"
+      ],
+      "volumes": [
+        "data2:/etcd-data"
+      ],
+      "networks": {
+        "raft": {
+          "ipv4_address": "172.29.0.12"
+        },
+        "clients": {
+          "ipv4_address": "172.29.1.12"
+        }
+      },
+      "healthcheck": {
+        "test": [
+          "CMD",
+          "/usr/local/bin/etcdctl",
+          "--endpoints=http://127.0.0.1:2379",
+          "--command-timeout=2s",
+          "endpoint",
+          "health"
+        ],
+        "interval": "5s",
+        "timeout": "3s",
+        "retries": 12
+      }
+    },
+    "etcd3": {
+      "image": "quay.io/coreos/etcd:v3.7.3",
+      "entrypoint": [
+        "/usr/local/bin/etcd"
+      ],
+      "command": [
+        "--name=etcd3",
+        "--data-dir=/etcd-data",
+        "--listen-peer-urls=http://172.29.0.13:2380",
+        "--initial-advertise-peer-urls=http://172.29.0.13:2380",
+        "--listen-client-urls=http://0.0.0.0:2379",
+        "--advertise-client-urls=http://172.29.1.13:2379",
+        "--initial-cluster=etcd1=http://172.29.0.11:2380,etcd2=http://172.29.0.12:2380,etcd3=http://172.29.0.13:2380",
+        "--initial-cluster-state=new",
+        "--initial-cluster-token=sd-etcd-n3",
+        "--heartbeat-interval=100",
+        "--election-timeout=1000",
+        "--snapshot-count=1000",
+        "--snapshot-catchup-entries=100",
+        "--log-level=info"
+      ],
+      "mem_limit": "256m",
+      "cpus": 0.5,
+      "stop_grace_period": "10s",
+      "ports": [
+        "127.0.0.1:14379:2379"
+      ],
+      "volumes": [
+        "data3:/etcd-data"
+      ],
+      "networks": {
+        "raft": {
+          "ipv4_address": "172.29.0.13"
+        },
+        "clients": {
+          "ipv4_address": "172.29.1.13"
+        }
+      },
+      "healthcheck": {
+        "test": [
+          "CMD",
+          "/usr/local/bin/etcdctl",
+          "--endpoints=http://127.0.0.1:2379",
+          "--command-timeout=2s",
+          "endpoint",
+          "health"
+        ],
+        "interval": "5s",
+        "timeout": "3s",
+        "retries": 12
+      }
+    }
+  },
+  "volumes": {
+    "data1": {},
+    "data2": {},
+    "data3": {}
+  },
+  "networks": {
+    "raft": {
+      "internal": true,
+      "ipam": {
+        "config": [
+          {
+            "subnet": "172.29.0.0/24"
+          }
+        ]
+      }
+    },
+    "clients": {
+      "ipam": {
+        "config": [
+          {
+            "subnet": "172.29.1.0/24"
+          }
+        ]
+      }
+    }
+  }
+}
